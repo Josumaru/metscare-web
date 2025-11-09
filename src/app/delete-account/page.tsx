@@ -190,7 +190,7 @@ export default function ProfilePage() {
   return (
     <Card className="max-w-sm mx-auto mt-20 p-6 flex flex-col items-center gap-4">
       <Avatar className="w-24 h-24">
-        <AvatarImage src={profile?.avatarUrl || ""} />
+        <AvatarImage src={profile?.avatarUrl || ""} className="object-cover"/>
         <AvatarFallback>{profile?.name?.charAt(0)}</AvatarFallback>
       </Avatar>
 
