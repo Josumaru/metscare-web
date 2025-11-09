@@ -189,7 +189,7 @@ export default function ProfilePage() {
     return (
       <Card className="max-w-sm mx-auto mt-20 p-6">
         <CardHeader>
-          <CardTitle>Masuk dulu ya… 🌸</CardTitle>
+          <CardTitle>Masuk dengan Akun anda</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="flex flex-col gap-4">
