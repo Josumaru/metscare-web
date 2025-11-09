@@ -121,9 +121,21 @@ export default function ProfilePage() {
     }
   }
 
+  async function handleLogout() {
+    if (!confirm("Apakah anda yakin ingin keluar?")) return;
+    try {
+      Cookies.remove("token");
+      Cookies.remove("user");
+      setToken(null);
+      setProfile(null);
+      toast("Anda berhasil keluar dari akun");
+    } catch (error) {
+      toast("Gagal keluar dari akun");
+    }
+  }
+
   async function handleDeleteAccount() {
-    if (!confirm("Apakah anda yakin ingin menghapus akun ini?"))
-      return;
+    if (!confirm("Apakah anda yakin ingin menghapus akun ini?")) return;
     try {
       const t = Cookies.get("token");
       if (!t) {
@@ -188,18 +200,31 @@ export default function ProfilePage() {
 
   // ---------- SUDAH LOGIN ----------
   return (
-    <Card className="max-w-sm mx-auto mt-20 p-6 flex flex-col items-center gap-4">
-      <Avatar className="w-24 h-24">
-        <AvatarImage src={profile?.avatarUrl || ""} className="object-cover"/>
-        <AvatarFallback>{profile?.name?.charAt(0)}</AvatarFallback>
-      </Avatar>
+    <div>
+      <Card className="max-w-sm mx-auto mt-20 p-6 flex flex-col items-center gap-4">
+        <h2 className="font-bold">Metscare</h2>
+        <Avatar className="w-24 h-24">
+          <AvatarImage
+            src={profile?.avatarUrl || ""}
+            className="object-cover"
+          />
+          <AvatarFallback>{profile?.name?.charAt(0)}</AvatarFallback>
+        </Avatar>
 
-      <CardTitle className="text-xl">{profile?.name}</CardTitle>
-      <p>{profile?.email || profile?.phoneNumber}</p>
+        <CardTitle className="text-xl">{profile?.name}</CardTitle>
+        <p>{profile?.email || profile?.phoneNumber}</p>
 
-      <Button variant="destructive" onClick={handleDeleteAccount}>
-        Hapus Akun
-      </Button>
-    </Card>
+        <Button
+          className="w-full"
+          variant="destructive"
+          onClick={handleDeleteAccount}
+        >
+          Hapus Akun
+        </Button>
+        <Button className="w-full" variant="ghost" onClick={handleLogout}>
+          Keluar
+        </Button>
+      </Card>
+    </div>
   );
 }
