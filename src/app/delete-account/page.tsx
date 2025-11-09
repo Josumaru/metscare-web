@@ -2,7 +2,17 @@
 
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
-
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
@@ -122,7 +132,8 @@ export default function ProfilePage() {
   }
 
   async function handleLogout() {
-    if (!confirm("Apakah anda yakin ingin keluar?")) return;
+    // if (!confirm("Apakah anda yakin ingin keluar?")) return;
+    setLoading(true);
     try {
       Cookies.remove("token");
       Cookies.remove("user");
@@ -131,11 +142,14 @@ export default function ProfilePage() {
       toast("Anda berhasil keluar dari akun");
     } catch (error) {
       toast("Gagal keluar dari akun");
+    } finally {
+      setLoading(false);
     }
   }
 
   async function handleDeleteAccount() {
-    if (!confirm("Apakah anda yakin ingin menghapus akun ini?")) return;
+    // if (!confirm("Apakah anda yakin ingin menghapus akun ini?")) return;
+    setLoading(true);
     try {
       const t = Cookies.get("token");
       if (!t) {
@@ -165,6 +179,8 @@ export default function ProfilePage() {
       toast("Akun berhasil dihapus");
     } catch (err) {
       toast("Terjadi kesalahan");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -213,17 +229,54 @@ export default function ProfilePage() {
 
         <CardTitle className="text-xl">{profile?.name}</CardTitle>
         <p>{profile?.email || profile?.phoneNumber}</p>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button className="w-full" variant="destructive">
+              Hapus Akun
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Apakah anda yakin ingin mengapus Akun?
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Akun anda akan dihapus secara permanen. Semua data terkait akun
+                ini akan hilang dan tidak bisa dikembalikan.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={loading}>Batal</AlertDialogCancel>
+              <AlertDialogAction
+                disabled={loading}
+                onClick={handleDeleteAccount}
+              >
+                {loading ? "Mohon tunggu" : "Hapus"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
-        <Button
-          className="w-full"
-          variant="destructive"
-          onClick={handleDeleteAccount}
-        >
-          Hapus Akun
-        </Button>
-        <Button className="w-full" variant="ghost" onClick={handleLogout}>
-          Keluar
-        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button className="w-full" variant="ghost">
+              Keluar
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Apakah anda yakin untuk keluar?
+              </AlertDialogTitle>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Batal</AlertDialogCancel>
+              <AlertDialogAction onClick={handleLogout}>
+                Yakin
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </Card>
     </div>
   );
